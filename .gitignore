@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment variables
+.env
+.env.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Data directories (samples可根据需要调整)
+samples/UI图片/
+uploads/
+temp/
+
+# Frontend (Next.js specific files are in frontend/.gitignore)
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+
+# Backend
+bug/backend/uploads/
+bug/backend/temp/

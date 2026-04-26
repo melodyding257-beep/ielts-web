@@ -31,7 +31,7 @@ ielts-web/
 │   ├── package.json
 │   └── next.config.ts
 │
-├── backend/                  # FastAPI 后端服务
+├── bug/backend/              # FastAPI 后端服务
 │   ├── app/
 │   │   ├── api/             # API 端点
 │   │   ├── core/            # 配置文件
@@ -48,7 +48,7 @@ ielts-web/
 ### 启动后端服务
 
 ```bash
-cd backend
+cd bug/backend
 pip install -r requirements.txt
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
@@ -206,7 +206,7 @@ npm update
 
 **后端**:
 ```bash
-cd backend
+cd bug/backend
 pip install --upgrade -r requirements.txt
 ```
 
