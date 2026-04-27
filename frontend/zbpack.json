@@ -1,6 +1,5 @@
 {
   "framework": "nextjs",
   "buildCommand": "npm run build",
-  "startCommand": "npm start",
-  "installCommand": "npm install"
+  "startCommand": "npm start"
 }
