@@ -46,5 +46,5 @@ frontend/out/
 frontend/build/
 
 # Backend
-bug/backend/uploads/
-bug/backend/temp/
+backend/uploads/
+backend/temp/

@@ -3,7 +3,7 @@ version: '3.8'
 services:
   backend:
     build:
-      context: ./bug/backend
+      context: ./backend
       dockerfile: Dockerfile
     ports:
       - "8001:8001"
@@ -11,7 +11,7 @@ services:
       - PYTHONPATH=/app
       - DEBUG=true
     volumes:
-      - ./bug/backend:/app
+      - ./backend:/app
 
   frontend:
     build:

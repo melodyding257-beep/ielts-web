@@ -23,7 +23,7 @@ git push origin main
 1. 在项目中点击 **Add Service**
 2. 选择 **Git Repository**
 3. 选择 `ielts-web` 仓库
-4. **关键步骤**：在 **Root Directory** 中输入 `bug/backend`
+4. **关键步骤**：在 **Root Directory** 中输入 `backend`
 5. Zeabur 会自动检测到 Python + Dockerfile
 6. 点击 **Deploy**
 7. 部署完成后，记录后端的 **域名**（如：`backend-xxx.zeabur.app`）
@@ -60,7 +60,7 @@ git push origin main
 }
 ```
 
-### 后端配置（bug/backend/zbpack.json）
+### 后端配置（backend/zbpack.json）
 ```json
 {
   "framework": "python",
@@ -74,7 +74,7 @@ git push origin main
 
 ### Q: Zeabur 显示"静态网站"
 **A**: 确保在添加服务时正确设置了 **Root Directory**：
-- 后端服务：`bug/backend`
+- 后端服务：`backend`
 - 前端服务：`frontend`
 
 ### Q: 前端无法连接后端
