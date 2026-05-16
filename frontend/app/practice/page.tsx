@@ -14,7 +14,7 @@ interface Question {
   userAnswer?: number | string;
   optionsPool?: { letter: string; text: string }[];
   tableColumns?: string[];
-  tableRows?: { question: string; correctColumn?: string }[];
+  tableRows?: { id?: number; question?: string; text?: string; correctColumn?: string; correctAnswer?: string }[];
   fillBlanks?: { id: number; textBefore?: string; textAfter?: string }[];
   instruction?: string;
 }
@@ -618,11 +618,15 @@ function MatchingTableQuestion({ question, userAnswers, onAnswerSelect }: {
           <thead>
             <tr className="bg-gray-100">
               <th className="border border-gray-300 px-4 py-2 text-left text-sm font-medium">Question</th>
-              {columns.map((column) => (
-                <th key={column} className="border border-gray-300 px-4 py-2 text-center text-sm font-medium w-16">
-                  {column}
-                </th>
-              ))}
+              {columns.map((column, index) => {
+                const columnKey = typeof column === 'string' ? column : column.letter;
+                const columnText = typeof column === 'string' ? column : column.letter;
+                return (
+                  <th key={columnKey || index} className="border border-gray-300 px-4 py-2 text-center text-sm font-medium w-16">
+                    {columnText}
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>
