@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(zeabur project *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'chore: 移除 Zeabur 配置文件，准备 Vercel 部署 *)",
+      "Bash(git push *)"
+    ]
+  }
+}
