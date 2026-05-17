@@ -229,9 +229,10 @@ function parseIELTSQuestions(questionsText: string, answerPages: any[]): Questio
   let currentInstruction = '';
   let mcOptions: string[] = [];
   let pendingQuestion: { id: number; text: string } | null = null;
-  // 用于收集段落匹配题的表格行
+  // 用于收集段落匹配题的表格行和选项池
   let matchingTableRows: { id: number; text: string }[] = [];
   let matchingTableInstruction = '';
+  let matchingOptionsPool: { letter: string; text: string }[] = [];
 
   const pushPending = () => {
     if (!pendingQuestion) return;
@@ -278,19 +279,34 @@ function parseIELTSQuestions(questionsText: string, answerPages: any[]): Questio
   const pushMatchingTable = () => {
     if (matchingTableRows.length === 0) return;
     const firstId = matchingTableRows[0].id;
+
+    // 如果没有选项池，使用默认的 A-H
+    if (matchingOptionsPool.length === 0) {
+      matchingOptionsPool = [
+        { letter: 'A', text: 'Option A' },
+        { letter: 'B', text: 'Option B' },
+        { letter: 'C', text: 'Option C' },
+        { letter: 'D', text: 'Option D' },
+        { letter: 'E', text: 'Option E' },
+        { letter: 'F', text: 'Option F' },
+        { letter: 'G', text: 'Option G' },
+        { letter: 'H', text: 'Option H' },
+      ];
+    }
+
     questions.push({
       id: firstId,
       type: 'matching_table',
       text: matchingTableInstruction,
-      tableColumns: ['A', 'B', 'C', 'D', 'E', 'F'],
+      optionsPool: [...matchingOptionsPool],
       tableRows: matchingTableRows.map(row => ({
-        id: row.id,
-        text: row.text,
-        correctAnswer: allAnswers[row.id] || undefined,
+        question: row.text,
+        correctColumn: allAnswers[row.id] || undefined,
       })),
     });
     matchingTableRows = [];
     matchingTableInstruction = '';
+    matchingOptionsPool = [];
   };
 
   for (const seg of segments) {
@@ -317,6 +333,15 @@ function parseIELTSQuestions(questionsText: string, answerPages: any[]): Questio
       const optionMatch = stripped.match(/^([A-D])\s*[.)]\s+(.+)/);
       if (optionMatch && currentType === 'mc' && pendingQuestion) {
         mcOptions.push(stripped.replace(/^[A-D]\s*[.)]\s+/, '').trim());
+        continue;
+      }
+
+      // matching_table 选项池：以 A-Z 字母开头
+      const poolMatch = stripped.match(/^([A-Z])\s+(.+)/);
+      if (poolMatch && currentType === 'matching_table' && matchingTableRows.length === 0) {
+        const letter = poolMatch[1];
+        const text = poolMatch[2].trim();
+        matchingOptionsPool.push({ letter, text });
         continue;
       }
 
@@ -639,28 +664,43 @@ function MatchingTableQuestion({ question, userAnswers, onAnswerSelect }: {
                 >
                   <td className="border border-gray-300 px-4 py-3 text-sm text-gray-700">
                     <span className="font-medium">{question.id + rowIndex} </span>
-                    {row.question}
+                    {row.question || row.text}
                   </td>
-                  {question.tableColumns?.map((column) => (
-                    <td key={column} className="border border-gray-300 px-4 py-3">
-                      <label className="flex justify-center">
-                        <input
-                          type="radio"
-                          name={`question-${question.id}-row-${rowIndex}`}
-                          checked={selectedColumn === column}
-                          onChange={() => setRowAnswer(rowIndex, column)}
-                          className="w-4 h-4 text-blue-600"
-                        />
-                      </label>
-                    </td>
-                  ))}
+                  {columns.map((column, colIndex) => {
+                    const columnValue = typeof column === 'string' ? column : column.letter;
+                    return (
+                      <td key={colIndex} className="border border-gray-300 px-4 py-3">
+                        <label className="flex justify-center">
+                          <input
+                            type="radio"
+                            name={`question-${question.id}-row-${rowIndex}`}
+                            checked={selectedColumn === columnValue}
+                            onChange={() => setRowAnswer(rowIndex, columnValue)}
+                            className="w-4 h-4 text-blue-600"
+                          />
+                        </label>
+                      </td>
+                    );
+                  })}
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
-      
+
+      {/* 选项池显示 */}
+      {question.optionsPool && question.optionsPool.length > 0 && (
+        <div className="mt-6 grid grid-cols-1 gap-3">
+          {question.optionsPool.map((option) => (
+            <div key={option.letter} className="flex gap-3 text-sm">
+              <span className="font-bold text-gray-900 min-w-[2rem]">{option.letter}</span>
+              <span className="text-gray-700">{option.text}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="flex justify-end mt-2">
         <BookmarkIcon isBookmarked={isBookmarked} onClick={() => setIsBookmarked(!isBookmarked)} />
       </div>
@@ -1082,10 +1122,14 @@ export default function PracticePage() {
             {isFinished && practiceData.keep_screenshot && practiceData.screenshot_path && (
               <div className="mt-8 border-t border-gray-300 pt-6">
                 <h3 className="text-lg font-semibold mb-4">解析</h3>
-                <img 
-                  src={practiceData.screenshot_path} 
-                  alt="Original analysis" 
+                <img
+                  src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001'}${practiceData.screenshot_path}`}
+                  alt="Original analysis"
                   className="max-w-full h-auto rounded border border-gray-200"
+                  onError={(e) => {
+                    console.error('截图加载失败:', practiceData.screenshot_path);
+                    e.currentTarget.style.display = 'none';
+                  }}
                 />
               </div>
             )}

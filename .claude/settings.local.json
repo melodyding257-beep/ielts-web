@@ -4,7 +4,11 @@
       "PowerShell(zeabur project *)",
       "Bash(git add *)",
       "Bash(git commit -m 'chore: 移除 Zeabur 配置文件，准备 Vercel 部署 *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "PowerShell(Start-Process \"https://ielts-backend-0hn1.onrender.com\")",
+      "PowerShell(Start-Process powershell -ArgumentList \"-NoExit\", \"-Command\", \"cd 'D:\\\\桌面\\\\ielts-web\\\\backend'; Write-Host '正在启动后端服务...' -ForegroundColor Green; python -m uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload\")",
+      "PowerShell(Start-Process powershell -ArgumentList \"-NoExit\", \"-Command\", \"cd 'D:\\\\桌面\\\\ielts-web\\\\backend'; Write-Host '=== IELTS 后端服务 ===' -ForegroundColor Cyan; Write-Host ''; Write-Host '提示：首次上传 PDF 会下载 OCR 模型（约 5-10 分钟）' -ForegroundColor Yellow; Write-Host '请耐心等待下载完成，不要中断' -ForegroundColor Yellow; Write-Host ''; python -m uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload\")",
+      "PowerShell(Start-Process powershell -ArgumentList \"-NoExit\", \"-Command\", \"cd 'D:\\\\桌面\\\\ielts-web\\\\frontend'; Write-Host '=== IELTS 前端服务 ===' -ForegroundColor Cyan; Write-Host ''; npm run dev\")"
     ]
   }
 }
